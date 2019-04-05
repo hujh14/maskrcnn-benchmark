@@ -7,6 +7,14 @@ import os
 class DatasetCatalog(object):
     DATA_DIR = "datasets"
     DATASETS = {
+        "ade_train": {
+            "img_dir": "ade20k/images",
+            "ann_file": "ade20k/annotations/instances_train.json"
+        },
+        "ade_val": {
+            "img_dir": "ade20k/images",
+            "ann_file": "ade20k/annotations/instances_val.json"
+        },
         "coco_2017_train": {
             "img_dir": "coco/train2017",
             "ann_file": "coco/annotations/instances_train2017.json"
@@ -108,7 +116,17 @@ class DatasetCatalog(object):
 
     @staticmethod
     def get(name):
-        if "coco" in name:
+        if "ade_challenge" in name or "places_challenge" in name:
+            data_dir = "/data/vision/torralba/ade20k-places/data"
+            args = dict(
+                root=data_dir,
+                ann_file=os.path.join(data_dir, name),
+            )
+            return dict(
+                factory="COCODataset",
+                args=args,
+                )
+        elif "coco" in name or "ade" in name:
             data_dir = DatasetCatalog.DATA_DIR
             attrs = DatasetCatalog.DATASETS[name]
             args = dict(

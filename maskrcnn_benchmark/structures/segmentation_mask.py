@@ -68,12 +68,11 @@ class Mask(object):
         return Mask(flipped_mask, self.size, self.mode)
 
     def crop(self, box):
-        box = [round(float(b)) for b in box]
-        w, h = box[2] - box[0] + 1, box[3] - box[1] + 1
-        w = max(w, 1)
-        h = max(h, 1)
-        cropped_mask = self.mask[box[1] : box[3], box[0] : box[2]]
-        return Mask(cropped_mask, size=(w, h), mode=self.mode)
+        box = [max(round(float(b)), 0) for b in box]
+        w = max(box[2] - box[0], 1)
+        h = max(box[3] - box[1], 1)
+        cropped_mask = self.mask[box[1] : box[1] + h, box[0] : box[0] + w]
+        return Mask(cropped_mask, size=(cropped_mask.shape[1], cropped_mask.shape[0]), mode=self.mode)
 
     def resize(self, size, *args, **kwargs):
         width, height = size
@@ -212,8 +211,11 @@ class SegmentationMask(object):
             mode: 'polygon', 'mask'. if mode is 'mask', convert mask of any format to binary mask
         """
         assert isinstance(segms, list)
-        if not isinstance(segms[0], (list, Polygons)):
+        if len(segms) == 0:
+            mode = "polygon"
+        elif not isinstance(segms[0], (list, Polygons)):
             mode = "mask"
+
         if mode == "mask":
             self.masks = [Mask(m, size, mode) for m in segms]
         else:  # polygons
