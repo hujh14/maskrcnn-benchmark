@@ -47,17 +47,17 @@ class BinaryMaskList(object):
             After initialization, a hard copy will be made, to leave the
             initializing source data intact.
         """
-
         if isinstance(masks, torch.Tensor):
             # The raw data representation is passed as argument
             masks = masks.clone()
         elif isinstance(masks, (list, tuple)):
             if isinstance(masks[0], torch.Tensor):
                 masks = torch.stack(masks, dim=2).clone()
-            elif isinstance(masks[0], dict) and "count" in masks[0]:
+            elif isinstance(masks[0], dict) and "counts" in masks[0]:
                 # RLE interpretation
-
-                masks = mask_utils
+                masks = mask_utils.decode(masks)
+                masks = np.transpose(masks, (2, 0, 1))
+                masks = torch.from_numpy(masks)
             else:
                 RuntimeError(
                     "Type of `masks[0]` could not be interpreted: %s" % type(masks)
@@ -67,7 +67,7 @@ class BinaryMaskList(object):
             masks = masks.masks.clone()
         else:
             RuntimeError(
-                "Type of `masks` argument could not be interpreted:%s" % tpye(masks)
+                "Type of `masks` argument could not be interpreted:%s" % type(masks)
             )
 
         if len(masks.shape) == 2:
