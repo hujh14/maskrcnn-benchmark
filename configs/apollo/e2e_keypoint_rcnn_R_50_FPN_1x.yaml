@@ -32,17 +32,16 @@ MODEL:
     NUM_CLASSES: 66
   KEYPOINT_ON: True
 DATASETS:
-  TRAIN: ("keypoints_apolloscape_train",)
-  TEST: ("keypoints_apolloscape_val",)
+  TRAIN: ("keypoints_apollo_train",)
+  TEST: ("keypoints_apollo_val",)
 INPUT:
   MIN_SIZE_TRAIN: (640, 672, 704, 736, 768, 800)
 DATALOADER:
   SIZE_DIVISIBILITY: 32
 SOLVER:
-  BASE_LR: 0.01 #0.02
+  BASE_LR: 0.02
   WEIGHT_DECAY: 0.0001
-  STEPS: (120000, 160000) #(60000, 80000)
-  MAX_ITER: 180000 #90000
-  IMS_PER_BATCH: 8
+  STEPS: (60000, 80000)
+  MAX_ITER: 90000
 TEST:
   IMS_PER_BATCH: 4

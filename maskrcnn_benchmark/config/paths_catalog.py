@@ -17,11 +17,11 @@ class DatasetCatalog(object):
         },
         "keypoints_apollo_train": {
             "img_dir": "apolloscape/images",
-            "ann_file": "apolloscape/annotations/car_keypoints_train_associated.json",
+            "ann_file": "apolloscape/annotations/car_keypoints_train.json",
         },
         "keypoints_apollo_val": {
             "img_dir": "apolloscape/images",
-            "ann_file": "apolloscape/annotations/car_keypoints_val_associated.json",
+            "ann_file": "apolloscape/annotations/car_keypoints_val.json",
         },
         "coco_2017_train": {
             "img_dir": "coco/train2017",
