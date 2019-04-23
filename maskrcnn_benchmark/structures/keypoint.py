@@ -125,9 +125,48 @@ class PersonKeypoints(Keypoints):
         'left_ankle': 'right_ankle'
     }
 
+class CarKeypoints(Keypoints):
+    NAMES = [str(i) for i in range(66)]
+    FLIP_MAP = {
+        0: 57,
+        1: 56,
+        2: 55,
+        3: 54,
+        4: 53,
+        5: 52,
+        6: 51,
+        7: 50,
+        8: 49,
+        9: 48,
+        10: 47,
+        11: 46,
+        12: 45,
+        13: 44,
+        14: 43,
+        15: 42,
+        16: 41,
+        17: 40,
+        18: 39,
+        19: 38,
+        20: 37,
+        21: 36,
+        22: 35,
+        23: 34,
+        24: 33,
+        25: 32,
+        26: 31,
+        27: 30,
+        28: 29,
+        58: 59,
+        60: 61,
+        62: 63,
+        64: 65
+    }
+    FLIP_MAP = {str(k): str(v) for k,v in FLIP_MAP.items()}
 
 # TODO this doesn't look great
 PersonKeypoints.FLIP_INDS = _create_flip_indices(PersonKeypoints.NAMES, PersonKeypoints.FLIP_MAP)
+CarKeypoints.FLIP_INDS = _create_flip_indices(CarKeypoints.NAMES, CarKeypoints.FLIP_MAP)
 def kp_connections(keypoints):
     kp_lines = [
         [keypoints.index('left_eye'), keypoints.index('right_eye')],
@@ -148,7 +187,7 @@ def kp_connections(keypoints):
     ]
     return kp_lines
 PersonKeypoints.CONNECTIONS = kp_connections(PersonKeypoints.NAMES)
-
+CarKeypoints.CONNECTIONS = []
 
 # TODO make this nicer, this is a direct translation from C2 (but removing the inner loop)
 def keypoints_to_heat_map(keypoints, rois, heatmap_size):

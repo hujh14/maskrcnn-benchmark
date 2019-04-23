@@ -47,17 +47,17 @@ class BinaryMaskList(object):
             After initialization, a hard copy will be made, to leave the
             initializing source data intact.
         """
-
         if isinstance(masks, torch.Tensor):
             # The raw data representation is passed as argument
             masks = masks.clone()
         elif isinstance(masks, (list, tuple)):
             if isinstance(masks[0], torch.Tensor):
                 masks = torch.stack(masks, dim=2).clone()
-            elif isinstance(masks[0], dict) and "count" in masks[0]:
+            elif isinstance(masks[0], dict) and "counts" in masks[0]:
                 # RLE interpretation
-
-                masks = mask_utils
+                masks = mask_utils.decode(masks)
+                masks = np.transpose(masks, (2, 0, 1))
+                masks = torch.from_numpy(masks)
             else:
                 RuntimeError(
                     "Type of `masks[0]` could not be interpreted: %s" % type(masks)
@@ -117,6 +117,11 @@ class BinaryMaskList(object):
 
         assert width > 0
         assert height > 0
+
+        if len(self.masks) == 0:
+            resized_masks = self.masks.reshape(0, height, width)
+            resized_size = width, height
+            return BinaryMaskList(resized_masks, resized_size)
 
         # Height comes first here!
         resized_masks = torch.nn.functional.interpolate(
@@ -441,7 +446,7 @@ class SegmentationMask(object):
     It wraps BinaryMaskList and PolygonList conveniently.
     """
 
-    def __init__(self, instances, size, mode="poly"):
+    def __init__(self, instances, size, mode=None):
         """
         Arguments:
             instances: two types
@@ -459,6 +464,11 @@ class SegmentationMask(object):
 
         assert isinstance(size[0], (int, float))
         assert isinstance(size[1], (int, float))
+
+        if mode is None:
+            mode = 'poly'
+            if len(instances) > 0 and isinstance(instances[0], dict):
+                mode = 'mask'
 
         if mode == "poly":
             self.instances = PolygonList(instances, size)

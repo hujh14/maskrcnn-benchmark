@@ -7,6 +7,14 @@ import os
 class DatasetCatalog(object):
     DATA_DIR = "datasets"
     DATASETS = {
+        "keypoints_apollo_train": {
+            "img_dir": "apolloscape/images",
+            "ann_file": "apolloscape/annotations/car_keypoints_train_associated.json",
+        },
+        "keypoints_apollo_val": {
+            "img_dir": "apolloscape/images",
+            "ann_file": "apolloscape/annotations/car_keypoints_val_associated.json",
+        },
         "coco_2017_train": {
             "img_dir": "coco/train2017",
             "ann_file": "coco/annotations/instances_train2017.json"
@@ -30,6 +38,14 @@ class DatasetCatalog(object):
         "coco_2014_valminusminival": {
             "img_dir": "coco/val2014",
             "ann_file": "coco/annotations/instances_valminusminival2014.json"
+        },
+        "keypoints_coco_2017_train": {
+            "img_dir": "coco/train2017",
+            "ann_file": "coco/annotations/person_keypoints_train2017.json",
+        },
+        "keypoints_coco_2017_val": {
+            "img_dir": "coco/val2017",
+            "ann_file": "coco/annotations/person_keypoints_val2017.json",
         },
         "keypoints_coco_2014_train": {
             "img_dir": "coco/train2014",
@@ -108,7 +124,8 @@ class DatasetCatalog(object):
 
     @staticmethod
     def get(name):
-        if "coco" in name:
+        dataset_names = ["coco", "ade", "places", "apollo"]
+        if any(s in name for s in dataset_names):
             data_dir = DatasetCatalog.DATA_DIR
             attrs = DatasetCatalog.DATASETS[name]
             args = dict(
