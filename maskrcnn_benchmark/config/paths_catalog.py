@@ -7,6 +7,14 @@ import os
 class DatasetCatalog(object):
     DATA_DIR = "datasets"
     DATASETS = {
+        "ade_train": {
+            "img_dir": "ade20k/images",
+            "ann_file": "ade20k/annotations/instances_train.json"
+        },
+        "ade_val": {
+            "img_dir": "ade20k/images",
+            "ann_file": "ade20k/annotations/instances_val.json"
+        },
         "keypoints_apollo_train": {
             "img_dir": "apolloscape/images",
             "ann_file": "apolloscape/annotations/car_keypoints_train_associated.json",
@@ -124,6 +132,17 @@ class DatasetCatalog(object):
 
     @staticmethod
     def get(name):
+        if "challenge" in name:
+            data_dir = "/data/vision/torralba/ade20k-places/data"
+            args = dict(
+                root=data_dir,
+                ann_file=os.path.join(data_dir, name),
+            )
+            return dict(
+                factory="COCODataset",
+                args=args,
+                )
+
         dataset_names = ["coco", "ade", "places", "apollo"]
         if any(s in name for s in dataset_names):
             data_dir = DatasetCatalog.DATA_DIR
