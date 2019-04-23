@@ -1,5 +1,5 @@
 
-NGPUS=4
+NGPUS=$1
 
 MASKRCNN_DIR="."
 CONFIG_FILE="$MASKRCNN_DIR/configs/apollo/e2e_keypoint_rcnn_R_50_FPN_1x.yaml"
