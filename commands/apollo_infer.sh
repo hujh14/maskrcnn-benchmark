@@ -13,6 +13,9 @@ TRAIN="keypoints_apollo_train"
 TEST="keypoints_apollo_val"
 OPTS="$OPTS DATASETS.TRAIN (\"$TRAIN\",) DATASETS.TEST (\"$TEST\",)"
 
+# More OPTS
+OPTS="$OPTS TEST.IMS_PER_BATCH 1"
+
 # Inference
 if [ "$NGPUS" = "1" ] ; then
 	COMMAND="python $MASKRCNN_DIR/tools/test_net.py $OPTS"

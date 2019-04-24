@@ -13,8 +13,9 @@ TRAIN="coco_2017_train"
 TEST="coco_2017_val"
 OPTS="$OPTS DATASETS.TRAIN (\"$TRAIN\",) DATASETS.TEST (\"$TEST\",)"
 
-# Weights
+# More OPTS
 OPTS="$OPTS MODEL.WEIGHT $MASKRCNN_DIR/models/model_final.pkl"
+OPTS="$OPTS TEST.IMS_PER_BATCH 1"
 
 # Inference
 if [ "$NGPUS" = "1" ] ; then
