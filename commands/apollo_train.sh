@@ -24,7 +24,10 @@ fi
 
 # Training
 if [ "$NGPUS" = "1" ] ; then
-	python $MASKRCNN_DIR/tools/train_net.py $OPTS 
+	COMMAND="python $MASKRCNN_DIR/tools/train_net.py $OPTS"
 else
-	python -m torch.distributed.launch --nproc_per_node=$NGPUS $MASKRCNN_DIR/tools/train_net.py $OPTS
+	COMMAND="python -m torch.distributed.launch --nproc_per_node=$NGPUS $MASKRCNN_DIR/tools/train_net.py $OPTS"
 fi
+
+echo $COMMAND
+$COMMAND
