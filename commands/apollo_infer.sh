@@ -9,12 +9,9 @@ OUTPUT_DIR="$MASKRCNN_DIR/output/apollo"
 OPTS="--config-file $CONFIG_FILE OUTPUT_DIR $OUTPUT_DIR"
 
 # Datasets
-TRAIN="keypoints_apollo_train"
-TEST="keypoints_apollo_val"
-OPTS="$OPTS DATASETS.TRAIN (\"$TRAIN\",) DATASETS.TEST (\"$TEST\",)"
-
-# More OPTS
-OPTS="$OPTS TEST.IMS_PER_BATCH 1"
+# TRAIN="keypoints_apollo_train"
+# TEST="keypoints_apollo_val"
+# OPTS="$OPTS DATASETS.TRAIN (\"$TRAIN\",) DATASETS.TEST (\"$TEST\",)"
 
 # Inference
 if [ "$NGPUS" = "1" ] ; then

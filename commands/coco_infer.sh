@@ -14,7 +14,7 @@ TEST="keypoints_coco_2017_val"
 OPTS="$OPTS DATASETS.TRAIN (\"$TRAIN\",) DATASETS.TEST (\"$TEST\",)"
 
 # More OPTS
-OPTS="$OPTS MODEL.WEIGHT $MASKRCNN_DIR/models/model_final.pkl"
+OPTS="$OPTS MODEL.WEIGHT $MASKRCNN_DIR/models/person_keypoint_model.pkl"
 OPTS="$OPTS TEST.IMS_PER_BATCH 1"
 
 # Inference
