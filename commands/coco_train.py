@@ -9,8 +9,8 @@ OUTPUT_DIR="$MASKRCNN_DIR/output/coco"
 OPTS="--config-file $CONFIG_FILE OUTPUT_DIR $OUTPUT_DIR"
 
 # Datasets
-TRAIN="coco_2017_train"
-TEST="coco_2017_val"
+TRAIN="keypoints_coco_2017_train"
+TEST="keypoints_coco_2017_val"
 OPTS="$OPTS DATASETS.TRAIN (\"$TRAIN\",) DATASETS.TEST (\"$TEST\",)"
 
 # Training schedule
