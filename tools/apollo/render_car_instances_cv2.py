@@ -31,9 +31,8 @@ class CarPoseVisualizer(object):
                 self.car_models[model.name]['vertices'][:, [0, 1]] *= -1
 
     def render_car(self, car_pose, image, intrinsic, fill=False):
-        car_name = car_models.car_id2name[car_pose['car_id']].name
-        car = self.car_models[car_name]
         pose = np.array(car_pose['pose'])
+        car = self.get_car(car_pose['car_id'])
 
         # Intrinsic dependent on image size
         h, w = image.shape[:2]
@@ -54,13 +53,19 @@ class CarPoseVisualizer(object):
                 cv2.polylines(mask, [pts], True, 255, thickness=2)
         return mask
 
-    def get_intrinsic(self, image_name):
-        return self.dataset.get_intrinsic(image_name)
+    def get_intrinsic(self):
+        return self.dataset.get_intrinsic("", camera_name="Camera_5")
 
     def get_image(self, image_name):
+        image_name = image_name.replace(".jpg", "")
         image_file = '%s/%s.jpg' % (self._data_config['image_dir'], image_name)
         image = cv2.imread(image_file)
         return image
+
+    def get_car(self, car_id):
+        car_name = car_models.car_id2name[car_id].name
+        car = self.car_models[car_name]
+        return car
 
     def get_distance(self, car_pose):
         x = car_pose["pose"][3]
@@ -97,7 +102,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Render car instance and convert car labelled files.')
     parser.add_argument('--image_name', default='180116_053947113_Camera_5',
                         help='the dir of ground truth')
-    parser.add_argument('--data_dir', default='../apolloscape/',
+    parser.add_argument('--data_dir', default='../../datasets/apollo/raw_data/',
                         help='the dir of ground truth')
     parser.add_argument('--split', default='sample_data', help='split for visualization')
     args = parser.parse_args()

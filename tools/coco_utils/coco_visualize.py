@@ -83,7 +83,7 @@ def vis_keypoints(img, keypoints, skeleton, radius=4, thick=2, color=_WHITE):
             cv2.line(img, visible_kps[l[0]], visible_kps[l[1]], color, thickness=thick)
     return img
 
-def vis_image(coco, img, anns):
+def vis_annotations(img, anns, coco):
     for ann in anns:
         cat = coco.cats[ann["category_id"]]
         name = cat["name"]
@@ -120,24 +120,25 @@ def vis_coco(coco, im_dir, out_dir):
     html_fn = os.path.join(out_dir, "all_images.html")
     open(html_fn, 'w').close()
 
-    # Visualize images
     for imgId in tqdm(coco.imgs):
         im = coco.imgs[imgId]
-        im_name = im["file_name"]
-        img_fn = os.path.join(im_dir, im_name)
-        out_fn = os.path.join(out_dir, im_name)
-        if not os.path.exists(os.path.dirname(out_fn)):
-            os.makedirs(os.path.dirname(out_fn))
 
-        annIds = coco.getAnnIds(imgIds=[imgId])
-        anns = coco.loadAnns(annIds)
-
-        # Visualize annotations
+        # Load image
+        img_fn = os.path.join(im_dir, im["file_name"])
         img = cv2.imread(img_fn)
         if img is None:
             print("Warning: Could not find ", img_fn)
             img = np.zeros((im["height"], im["width"], 3))
-        img = vis_image(coco, img, anns)
+
+        # Visualize annotations
+        annIds = coco.getAnnIds(imgIds=[imgId])
+        anns = coco.loadAnns(annIds)
+        img = vis_annotations(img, anns, coco)
+
+        # Save image
+        out_fn = os.path.join(out_dir, im["file_name"])
+        if not os.path.exists(os.path.dirname(out_fn)):
+            os.makedirs(os.path.dirname(out_fn))
         cv2.imwrite(out_fn, img)
 
         # Append to html
@@ -155,8 +156,7 @@ if __name__ == "__main__":
         args.out_dir = args.ann_fn.replace(".json", "")
     print(args)
 
-    print("Writing to:", args.out_dir)
-    print("Open:", os.path.join(args.out_dir, "all_images.html"))
+    print("Writing to:", os.path.join(args.out_dir, "all_images.html"))
 
     if not os.path.exists(args.out_dir):
         os.makedirs(args.out_dir)
